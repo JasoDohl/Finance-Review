@@ -59,16 +59,6 @@
         <!-- Main Content Area -->
         <main class="flex-1 p-4 md:p-10 relative">
             
-            <!-- Config Warning Overlay -->
-            <div id="config-warning" class="hidden absolute inset-0 bg-white/90 z-50 flex items-center justify-center backdrop-blur-sm">
-                <div class="bg-white p-8 rounded-2xl shadow-2xl border-2 border-red-100 max-w-lg text-center">
-                    <h2 class="text-2xl font-bold text-red-600 mb-2">⚠️ Configuration Needed</h2>
-                    <p class="text-slate-600 mb-4">You need to paste your Firebase Keys into the code.</p>
-                    <p class="text-xs text-slate-400 bg-slate-100 p-2 rounded">Open index.html and look for lines 300-307.</p>
-                    <button onclick="document.getElementById('config-warning').classList.add('hidden')" class="mt-4 text-indigo-600 underline text-sm">Continue using Local Storage for now</button>
-                </div>
-            </div>
-
             <!-- Notes Modal (Cheat Sheet) -->
             <div id="notes-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
                 <div class="bg-white rounded-xl shadow-2xl w-full max-w-3xl max-h-[85vh] overflow-y-auto">
@@ -283,53 +273,28 @@
 
     <!-- Firebase Logic -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         // ============================================================
-        // 🔴 TEACHER: PASTE YOUR FIREBASE CONFIG HERE
+        // 🔴 TEACHER: FIREBASE CONFIG INSERTED BELOW
         // ============================================================
-   	 const firebaseConfig = {
- 	 apiKey: "AIzaSyD_Vj-V_oQOLxEfCCgerD6BanWa14PVrDY",
- 	 authDomain: "financial-literacy-review.firebaseapp.com",
- 	 projectId: "financial-literacy-review",
- 	 storageBucket: "financial-literacy-review.firebasestorage.app",
- 	 messagingSenderId: "257043610594",
- 	 appId: "1:257043610594:web:8113cb60be0522a23c17bb"
-	};
+        const firebaseConfig = {
+            apiKey: "AIzaSyD_Vj-V_oQOLxEfCCgerD6BanWa14PVrDY",
+            authDomain: "financial-literacy-review.firebaseapp.com",
+            projectId: "financial-literacy-review",
+            storageBucket: "financial-literacy-review.firebasestorage.app",
+            messagingSenderId: "257043610594",
+            appId: "1:257043610594:web:8113cb60be0522a23c17bb"
+        };
         // ============================================================
 
         let auth, db, user = null;
         let isFirebaseActive = false;
         let localCompleted = JSON.parse(localStorage.getItem('completedCh')) || [];
-
-        // Initialize Firebase safely
-        try {
-            if (firebaseConfig.apiKey === "REPLACE_WITH_YOUR_API_KEY") {
-                console.warn("Firebase config not set.");
-                document.getElementById('config-warning').classList.remove('hidden');
-            } else {
-                const app = initializeApp(firebaseConfig);
-                auth = getAuth(app);
-                db = getFirestore(app);
-                isFirebaseActive = true;
-                
-                // Auth Listener
-                onAuthStateChanged(auth, async (currentUser) => {
-                    user = currentUser;
-                    updateUIForUser();
-                    if (user) {
-                        await loadUserData();
-                    } else {
-                        updateDashboard(); 
-                    }
-                });
-            }
-        } catch (e) {
-            console.error("Firebase Init Error:", e);
-        }
-
+        
+        // Define app functions immediately so UI is clickable even if Firebase fails
         window.app = {
             showPage: (pageId) => {
                 document.querySelectorAll('section').forEach(sec => sec.classList.add('hidden'));
@@ -341,16 +306,8 @@
 
             handleCh1: (step, choice) => {
                 const answers = { 
-                    1: 'B', // Process Step 1
-                    2: 'B', // Procrastination = Personal
-                    3: 'B', // Higher Interest = Less borrowing
-                    4: 'A', // GDP Definition
-                    5: 'A', // Unemployment = Economic
-                    6: 'B', // Liquidity Risk Definition
-                    7: 'A', // Opp Cost Def
-                    8: 'A', // Personal Opp Cost
-                    9: 'A', // TVM measures Financial Opp Cost
-                    10: 'C' // Not a factor
+                    1: 'B', 2: 'B', 3: 'B', 4: 'A', 5: 'A', 
+                    6: 'B', 7: 'A', 8: 'A', 9: 'A', 10: 'C' 
                 };
                 
                 const hints = {
@@ -363,7 +320,7 @@
                     7: "Hint: It is the cost of the 'opportunity' you missed.",
                     8: "Hint: Does this involve money? No. It involves time/energy.",
                     9: "Hint: Interest is money, so it is a Financial cost.",
-                    10: "Hint: Weather/Traffic are annoyance, but not one of the 6 key factors (Values, Peers, Habits, Feelings, Family, Risks)."
+                    10: "Hint: Weather/Traffic are annoyance, but not one of the 6 key factors."
                 };
 
                 const feedback = document.getElementById('ch1-feedback');
@@ -384,4 +341,118 @@
                         document.getElementById('ch1-progress').style.width = (next / 11 * 100) + '%';
 
                         if (next <= 10) {
-                            document.getElementById(`ch1-q${
+                            document.getElementById(`ch1-q${next}`).classList.remove('hidden');
+                        } else {
+                            document.getElementById('ch1-success').classList.remove('hidden');
+                            markChapterComplete('Chapter 1');
+                        }
+                    }, 1000);
+                } else {
+                    feedback.innerText = "Try again. " + hints[step];
+                    feedback.classList.add('bg-red-50', 'text-red-700', 'border-red-200');
+                }
+            }
+        };
+
+        // Initialize Firebase safely
+        try {
+            if (firebaseConfig.apiKey.includes("REPLACE")) {
+                console.warn("Firebase config not set.");
+            } else {
+                const app = initializeApp(firebaseConfig);
+                auth = getAuth(app);
+                db = getFirestore(app);
+                isFirebaseActive = true;
+                
+                // Auth Listener
+                onAuthStateChanged(auth, async (currentUser) => {
+                    user = currentUser;
+                    updateUIForUser();
+                    if (user) {
+                        await loadUserData();
+                    } else {
+                        updateDashboard(); 
+                    }
+                });
+            }
+        } catch (e) {
+            console.error("Firebase Init Error:", e);
+            document.getElementById('completion-status').innerText = "System loaded (Offline Mode)";
+        }
+
+        async function markChapterComplete(chapterName) {
+            if (!localCompleted.includes(chapterName)) {
+                localCompleted.push(chapterName);
+                localStorage.setItem('completedCh', JSON.stringify(localCompleted));
+            }
+
+            if (isFirebaseActive && user) {
+                try {
+                    const userRef = doc(db, "users", user.uid);
+                    await setDoc(userRef, { completedChapters: localCompleted }, { merge: true });
+                } catch (e) {
+                    console.error("Error saving to cloud", e);
+                }
+            }
+            updateDashboard();
+        }
+
+        async function loadUserData() {
+            if (!isFirebaseActive || !user) return;
+            try {
+                const docRef = doc(db, "users", user.uid);
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    const cloudChapters = data.completedChapters || [];
+                    localCompleted = [...new Set([...localCompleted, ...cloudChapters])];
+                    updateDashboard();
+                }
+            } catch (e) {
+                console.error("Error loading data", e);
+            }
+        }
+
+        function updateDashboard() {
+            const status = document.getElementById('completion-status');
+            if (localCompleted.length > 0) {
+                status.innerText = `Chapters Completed: ${localCompleted.join(', ')}`;
+            } else {
+                status.innerText = "You haven't completed any chapters yet.";
+            }
+        }
+
+        function updateUIForUser() {
+            const loginUI = document.getElementById('login-ui');
+            const userInfo = document.getElementById('user-info');
+            const loginPrompt = document.getElementById('login-prompt');
+            
+            if (user) {
+                loginUI.classList.add('hidden');
+                userInfo.classList.remove('hidden');
+                document.getElementById('user-photo').src = user.photoURL || '';
+                document.getElementById('user-name').innerText = user.displayName;
+                loginPrompt.classList.add('hidden');
+                document.getElementById('logout-btn').onclick = () => signOut(auth);
+            } else {
+                loginUI.classList.remove('hidden');
+                userInfo.classList.add('hidden');
+                loginPrompt.classList.remove('hidden');
+                document.getElementById('login-btn').onclick = async () => {
+                    const provider = new GoogleAuthProvider();
+                    try {
+                        await signInWithPopup(auth, provider);
+                    } catch (error) {
+                        console.error("Login Failed", error);
+                        alert("Login failed. Check authorized domains.");
+                    }
+                };
+            }
+            updateDashboard();
+        }
+
+        // Run dashboard update immediately
+        updateDashboard();
+    </script>
+</body>
+</html>
