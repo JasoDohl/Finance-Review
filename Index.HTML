@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Finance Review Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .fade-in { animation: fadeIn 0.4s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .hidden { display: none; }
+        .active-nav { background-color: #e0e7ff; color: #4338ca; border-right: 4px solid #4338ca; }
+    </style>
+</head>
+<body class="bg-slate-100 min-h-screen font-sans text-slate-900">
+
+    <div class="flex flex-col md:flex-row min-h-screen">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="w-full md:w-64 bg-white shadow-md z-10 flex flex-col">
+            <div class="p-6 border-b">
+                <h2 class="text-xl font-bold text-indigo-700">Review Hub</h2>
+                <p class="text-xs text-slate-500 uppercase font-bold mt-1">Personal Finance</p>
+            </div>
+            
+            <!-- User Profile Section -->
+            <div id="user-section" class="p-4 bg-indigo-50 border-b border-indigo-100">
+                <div id="login-ui">
+                    <button id="login-btn" class="w-full bg-white text-indigo-600 font-bold py-2 px-4 rounded border border-indigo-200 hover:bg-indigo-50 transition shadow-sm flex items-center justify-center gap-2">
+                        <svg class="w-4 h-4" viewBox="0 0 24 24"><path fill="currentColor" d="M21.35 11.1h-9.17v2.98h5.24c-.23 1.2-1.9 3.54-5.24 3.54c-3.15 0-5.73-2.61-5.73-5.8s2.58-5.8 5.73-5.8c1.37 0 2.66.47 3.66 1.4l2.25-2.25C16.48 3.8 14.51 3 12.18 3C7.11 3 3 7.11 3 12.18s4.11 9.18 9.18 9.18c5.29 0 8.81-3.72 8.81-8.96c0-.6-.07-1.18-.15-1.74z"/></svg>
+                        Sign in with Google
+                    </button>
+                    <p class="text-[10px] text-center text-slate-500 mt-2">Sign in to save progress to the cloud</p>
+                </div>
+                <div id="user-info" class="hidden">
+                    <div class="flex items-center gap-3">
+                        <img id="user-photo" src="" alt="User" class="w-8 h-8 rounded-full bg-indigo-200">
+                        <div class="overflow-hidden">
+                            <p id="user-name" class="text-sm font-bold text-indigo-900 truncate">Student Name</p>
+                            <button id="logout-btn" class="text-xs text-indigo-500 hover:text-indigo-700 underline">Sign Out</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <nav class="mt-4 flex-1">
+                <button onclick="window.app.showPage('home')" id="nav-home" class="w-full flex items-center px-6 py-4 text-left hover:bg-slate-50 transition active-nav">
+                    <span class="mr-3">🏠</span> Home Dashboard
+                </button>
+                <button onclick="window.app.showPage('ch1')" id="nav-ch1" class="w-full flex items-center px-6 py-4 text-left hover:bg-slate-50 transition">
+                    <span class="mr-3">🔑</span> Chapter 1: Decisions
+                </button>
+                <button onclick="window.app.showPage('ch2')" id="nav-ch2" class="w-full flex items-center px-6 py-4 text-left hover:bg-slate-50 transition text-slate-400 cursor-not-allowed">
+                    <span class="mr-3">📊</span> Chapter 2: (Coming Soon)
+                </button>
+            </nav>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 p-4 md:p-10 relative">
+            <!-- Config Warning Overlay -->
+            <div id="config-warning" class="hidden absolute inset-0 bg-white/90 z-50 flex items-center justify-center backdrop-blur-sm">
+                <div class="bg-white p-8 rounded-2xl shadow-2xl border-2 border-red-100 max-w-lg text-center">
+                    <h2 class="text-2xl font-bold text-red-600 mb-2">⚠️ Configuration Needed</h2>
+                    <p class="text-slate-600 mb-4">The teacher needs to update the code with Firebase keys for the login to work.</p>
+                    <p class="text-xs text-slate-400 bg-slate-100 p-2 rounded">Open index.html and look for "PASTE YOUR FIREBASE CONFIG HERE"</p>
+                    <button onclick="document.getElementById('config-warning').classList.add('hidden')" class="mt-4 text-indigo-600 underline text-sm">Continue using Local Storage for now</button>
+                </div>
+            </div>
+
+            <div id="content-area" class="max-w-4xl mx-auto">
+                
+                <!-- HOME DASHBOARD -->
+                <section id="page-home" class="fade-in">
+                    <div class="bg-white rounded-2xl shadow-sm p-8 mb-6 border border-slate-200">
+                        <h1 class="text-3xl font-extrabold text-slate-800 mb-4">Welcome to the Interactive Review Hub</h1>
+                        <p class="text-slate-600 leading-relaxed mb-6">
+                            This site is designed to help you prepare for your chapter tests through interactive games and escape rooms. 
+                            <span id="login-prompt" class="font-bold text-indigo-600">Sign in to save your progress!</span>
+                        </p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="p-6 border rounded-xl bg-indigo-50 border-indigo-100">
+                                <h3 class="font-bold text-indigo-900">Current Progress</h3>
+                                <p id="completion-status" class="text-sm text-indigo-700 mt-1">Loading progress...</p>
+                            </div>
+                            <div class="p-6 border rounded-xl bg-slate-50 border-slate-200">
+                                <h3 class="font-bold text-slate-800">Next Up</h3>
+                                <p class="text-sm text-slate-600 mt-1">Complete Chapter 1: Decision Making.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- CHAPTER 1 PAGE -->
+                <section id="page-ch1" class="fade-in hidden">
+                    <div class="bg-white rounded-2xl shadow-xl p-8 min-h-[500px] border border-slate-200">
+                        <!-- Escape Room Container -->
+                        <div id="ch1-game">
+                            <header class="text-center mb-10">
+                                <h2 class="text-2xl font-bold text-indigo-700 mb-2">The Crossroads Escape</h2>
+                                <div class="w-full bg-slate-100 rounded-full h-2 mt-4">
+                                    <div id="ch1-progress" class="bg-indigo-600 h-2 rounded-full transition-all duration-500" style="width: 20%"></div>
+                                </div>
+                                <p id="ch1-step-text" class="text-xs font-bold text-slate-400 mt-2 uppercase tracking-widest">Stage 1: The Process</p>
+                            </header>
+
+                            <!-- Question Stages -->
+                            <div id="ch1-q1" class="ch1-stage">
+                                <p class="text-lg mb-6 font-medium">Alex has two job offers. What is the <strong>very first step</strong> in the decision-making process?</p>
+                                <div class="grid gap-3">
+                                    <button onclick="window.app.handleCh1(1, 'B')" class="p-4 border rounded-lg hover:bg-indigo-50 text-left transition">Identify the problem</button>
+                                    <button onclick="window.app.handleCh1(1, 'A')" class="p-4 border rounded-lg hover:bg-indigo-50 text-left transition">Evaluate the results</button>
+                                    <button onclick="window.app.handleCh1(1, 'C')" class="p-4 border rounded-lg hover:bg-indigo-50 text-left transition">Gather information</button>
+                                </div>
+                            </div>
+
+                            <div id="ch1-q2" class="ch1-stage hidden">
+                                <p class="text-lg mb-6 font-medium">Alex hears <strong>Interest Rates</strong> are rising. What is the likely result?</p>
+                                <div class="grid gap-3">
+                                    <button onclick="window.app.handleCh1(2, 'A')" class="p-4 border rounded-lg hover:bg-indigo-50 text-left transition">Higher spending</button>
+                                    <button onclick="window.app.handleCh1(2, 'B')" class="p-4 border rounded-lg hover:bg-indigo-50 text-left transition">Less borrowing</button>
+                                    <button onclick="window.app.handleCh1(2, 'C')" class="p-4 border rounded-lg hover:bg-indigo-50 text-left transition">Lower taxes</button>
+                                </div>
+                            </div>
+
+                            <div id="ch1-q3" class="ch1-stage hidden">
+                                <p class="text-lg mb-6 font-medium">What is <strong>Liquidity Risk</strong>?</p>
+                                <div class="grid gap-3">
+                                    <button onclick="window.app.handleCh1(3, 'A')" class="p-4 border rounded-lg hover:bg-indigo-50 text-left transition">Risk of rising prices (inflation)</button>
+                                    <button onclick="window.app.handleCh1(3, 'B')" class="p-4 border rounded-lg hover:bg-indigo-50 text-left transition">Difficulty converting investments to cash quickly</button>
+                                    <button onclick="window.app.handleCh1(3, 'C')" class="p-4 border rounded-lg hover:bg-indigo-50 text-left transition">Risk of losing your job</button>
+                                </div>
+                            </div>
+
+                            <div id="ch1-q4" class="ch1-stage hidden text-center py-10">
+                                <span class="text-5xl">🎉</span>
+                                <h3 class="text-2xl font-bold mt-4">Chapter 1 Complete!</h3>
+                                <p class="text-slate-500 mb-6">You've mastered the basics of decision making.</p>
+                                <button onclick="window.app.showPage('home')" class="bg-indigo-600 text-white px-6 py-2 rounded-lg font-bold">Return to Dashboard</button>
+                            </div>
+
+                            <div id="ch1-feedback" class="mt-6 p-4 rounded-lg hidden text-center text-sm font-bold"></div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Firebase Logic -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // ============================================================
+        // 🔴 TEACHER: PASTE YOUR FIREBASE CONFIG HERE
+        // ============================================================
+  	 const firebaseConfig = {
+ 	 apiKey: "AIzaSyD_Vj-V_oQOLxEfCCgerD6BanWa14PVrDY",
+ 	 authDomain: "financial-literacy-review.firebaseapp.com",
+ 	 projectId: "financial-literacy-review",
+ 	 storageBucket: "financial-literacy-review.firebasestorage.app",
+ 	 messagingSenderId: "257043610594",
+ 	 appId: "1:257043610594:web:8113cb60be0522a23c17bb"
+	};
+        // ============================================================
+
+        let auth, db, user = null;
+        let isFirebaseActive = false;
+        let localCompleted = JSON.parse(localStorage.getItem('completedCh')) || [];
+
+        // Initialize Firebase safely
+        try {
+            if (firebaseConfig.apiKey === "REPLACE_WITH_YOUR_API_KEY") {
+                console.warn("Firebase config not set.");
+                document.getElementById('config-warning').classList.remove('hidden');
+            } else {
+                const app = initializeApp(firebaseConfig);
+                auth = getAuth(app);
+                db = getFirestore(app);
+                isFirebaseActive = true;
+                
+                // Auth Listener
+                onAuthStateChanged(auth, async (currentUser) => {
+                    user = currentUser;
+                    updateUIForUser();
+                    if (user) {
+                        await loadUserData();
+                    } else {
+                        // Fallback to local
+                        updateDashboard(); 
+                    }
+                });
+            }
+        } catch (e) {
+            console.error("Firebase Init Error:", e);
+        }
+
+        // --- Functions Exposed to Window for HTML Buttons ---
+        
+        window.app = {
+            showPage: (pageId) => {
+                document.querySelectorAll('section').forEach(sec => sec.classList.add('hidden'));
+                document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active-nav'));
+                document.getElementById('page-' + pageId).classList.remove('hidden');
+                document.getElementById('nav-' + pageId).classList.add('active-nav');
+                if (pageId === 'home') updateDashboard();
+            },
+
+            handleCh1: (step, choice) => {
+                const ch1Answers = { 1: 'B', 2: 'B', 3: 'B' };
+                const feedback = document.getElementById('ch1-feedback');
+                const isCorrect = choice === ch1Answers[step];
+
+                feedback.classList.remove('hidden', 'bg-red-100', 'text-red-700', 'bg-green-100', 'text-green-700');
+                
+                if (isCorrect) {
+                    feedback.innerText = "Correct! Moving to next challenge...";
+                    feedback.classList.add('bg-green-100', 'text-green-700');
+                    feedback.classList.remove('hidden');
+                    
+                    setTimeout(() => {
+                        feedback.classList.add('hidden');
+                        document.getElementById(`ch1-q${step}`).classList.add('hidden');
+                        const next = step + 1;
+                        document.getElementById(`ch1-q${next}`).classList.remove('hidden');
+                        
+                        document.getElementById('ch1-progress').style.width = (next / 4 * 100) + '%';
+                        const steps = ["The Process", "Economic Climate", "Understanding Risk", "Complete"];
+                        document.getElementById('ch1-step-text').innerText = "Stage " + next + ": " + (steps[next-1] || "Complete");
+
+                        if (next === 4) markChapterComplete('Chapter 1');
+                    }, 1000);
+                } else {
+                    feedback.innerText = "Try again! Review your notes.";
+                    feedback.classList.add('bg-red-100', 'text-red-700');
+                    feedback.classList.remove('hidden');
+                }
+            }
+        };
+
+        // --- Helper Logic ---
+
+        async function markChapterComplete(chapterName) {
+            // Always save to local as backup
+            if (!localCompleted.includes(chapterName)) {
+                localCompleted.push(chapterName);
+                localStorage.setItem('completedCh', JSON.stringify(localCompleted));
+            }
+
+            // If logged in, save to Cloud
+            if (isFirebaseActive && user) {
+                try {
+                    const userRef = doc(db, "users", user.uid);
+                    await setDoc(userRef, { completedChapters: localCompleted }, { merge: true });
+                    console.log("Progress saved to cloud!");
+                } catch (e) {
+                    console.error("Error saving to cloud", e);
+                }
+            }
+            updateDashboard();
+        }
+
+        async function loadUserData() {
+            if (!isFirebaseActive || !user) return;
+            try {
+                const docRef = doc(db, "users", user.uid);
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    // Merge cloud data with local data to be safe
+                    const cloudChapters = data.completedChapters || [];
+                    localCompleted = [...new Set([...localCompleted, ...cloudChapters])];
+                    updateDashboard();
+                }
+            } catch (e) {
+                console.error("Error loading data", e);
+            }
+        }
+
+        function updateDashboard() {
+            const status = document.getElementById('completion-status');
+            if (localCompleted.length > 0) {
+                status.innerText = `Chapters Completed: ${localCompleted.join(', ')}`;
+            } else {
+                status.innerText = "You haven't completed any chapters yet.";
+            }
+        }
+
+        function updateUIForUser() {
+            const loginUI = document.getElementById('login-ui');
+            const userInfo = document.getElementById('user-info');
+            const loginPrompt = document.getElementById('login-prompt');
+            
+            if (user) {
+                loginUI.classList.add('hidden');
+                userInfo.classList.remove('hidden');
+                document.getElementById('user-photo').src = user.photoURL || '';
+                document.getElementById('user-name').innerText = user.displayName;
+                loginPrompt.classList.add('hidden');
+                
+                // Bind Logout
+                document.getElementById('logout-btn').onclick = () => signOut(auth);
+            } else {
+                loginUI.classList.remove('hidden');
+                userInfo.classList.add('hidden');
+                loginPrompt.classList.remove('hidden');
+                
+                // Bind Login
+                document.getElementById('login-btn').onclick = async () => {
+                    const provider = new GoogleAuthProvider();
+                    try {
+                        await signInWithPopup(auth, provider);
+                    } catch (error) {
+                        console.error("Login Failed", error);
+                        alert("Login failed. Ask your teacher if the domain is authorized.");
+                    }
+                };
+            }
+            updateDashboard(); // Refresh text
+        }
+
+        // Initial Run
+        updateDashboard();
+
+    </script>
+</body>
+</html>
