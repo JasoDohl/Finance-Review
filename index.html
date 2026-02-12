@@ -4,265 +4,418 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Personal Finance Review Hub</title>
+    <!-- Modern Font: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                fontFamily: {
+                    sans: ['Inter', 'sans-serif'],
+                },
+                extend: {
+                    colors: {
+                        primary: '#6366f1',
+                        secondary: '#4f46e5',
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        .fade-in { animation: fadeIn 0.4s ease-in-out; }
+        .fade-in { animation: fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .hidden { display: none; }
-        .active-nav { background-color: #e0e7ff; color: #4338ca; border-right: 4px solid #4338ca; }
+        /* Modern Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .active-nav { 
+            background: linear-gradient(90deg, rgba(99, 102, 241, 0.1) 0%, transparent 100%);
+            border-left: 4px solid #6366f1;
+            color: #818cf8;
+        }
     </style>
 </head>
-<body class="bg-slate-100 min-h-screen font-sans text-slate-900">
+<body class="bg-slate-50 text-slate-800 min-h-screen font-sans selection:bg-indigo-100 selection:text-indigo-700">
 
     <div class="flex flex-col md:flex-row min-h-screen">
         
-        <!-- Sidebar Navigation -->
-        <aside class="w-full md:w-64 bg-white shadow-md z-10 flex flex-col">
-            <div class="p-6 border-b">
-                <h2 class="text-xl font-bold text-indigo-700">Review Hub</h2>
-                <p class="text-xs text-slate-500 uppercase font-bold mt-1">Personal Finance</p>
+        <!-- Modern Dark Sidebar -->
+        <aside class="w-full md:w-72 bg-slate-900 text-slate-300 shadow-2xl z-20 flex flex-col transition-all">
+            <div class="p-8 border-b border-slate-800">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-indigo-500/30">
+                        PF
+                    </div>
+                    <div>
+                        <h2 class="text-lg font-bold text-white tracking-tight">Review Hub</h2>
+                        <p class="text-xs text-indigo-400 font-semibold uppercase tracking-wider">Financial Literacy</p>
+                    </div>
+                </div>
             </div>
             
             <!-- User Profile Section -->
-            <div id="user-section" class="p-4 bg-indigo-50 border-b border-indigo-100">
+            <div id="user-section" class="p-6 bg-slate-800/50 border-b border-slate-800">
                 <div id="login-ui">
-                    <button id="login-btn" class="w-full bg-white text-indigo-600 font-bold py-2 px-4 rounded border border-indigo-200 hover:bg-indigo-50 transition shadow-sm flex items-center justify-center gap-2">
-                        <svg class="w-4 h-4" viewBox="0 0 24 24"><path fill="currentColor" d="M21.35 11.1h-9.17v2.98h5.24c-.23 1.2-1.9 3.54-5.24 3.54c-3.15 0-5.73-2.61-5.73-5.8s2.58-5.8 5.73-5.8c1.37 0 2.66.47 3.66 1.4l2.25-2.25C16.48 3.8 14.51 3 12.18 3C7.11 3 3 7.11 3 12.18s4.11 9.18 9.18 9.18c5.29 0 8.81-3.72 8.81-8.96c0-.6-.07-1.18-.15-1.74z"/></svg>
+                    <button id="login-btn" class="w-full bg-white hover:bg-indigo-50 text-slate-900 font-bold py-3 px-4 rounded-xl transition-all transform hover:scale-[1.02] shadow-md flex items-center justify-center gap-2 group">
+                        <svg class="w-5 h-5 text-indigo-600 group-hover:rotate-12 transition-transform" viewBox="0 0 24 24"><path fill="currentColor" d="M21.35 11.1h-9.17v2.98h5.24c-.23 1.2-1.9 3.54-5.24 3.54c-3.15 0-5.73-2.61-5.73-5.8s2.58-5.8 5.73-5.8c1.37 0 2.66.47 3.66 1.4l2.25-2.25C16.48 3.8 14.51 3 12.18 3C7.11 3 3 7.11 3 12.18s4.11 9.18 9.18 9.18c5.29 0 8.81-3.72 8.81-8.96c0-.6-.07-1.18-.15-1.74z"/></svg>
                         Sign in with Google
                     </button>
-                    <p class="text-[10px] text-center text-slate-500 mt-2">Sign in to save progress to the cloud</p>
+                    <p class="text-[10px] text-center text-slate-500 mt-3 font-medium">Save your progress to the cloud</p>
                 </div>
-                <div id="user-info" class="hidden">
-                    <div class="flex items-center gap-3">
-                        <img id="user-photo" src="" alt="User" class="w-8 h-8 rounded-full bg-indigo-200">
+                <div id="user-info" class="hidden animate-fade-in">
+                    <div class="flex items-center gap-4">
+                        <img id="user-photo" src="" alt="User" class="w-10 h-10 rounded-full border-2 border-indigo-500 shadow-md">
                         <div class="overflow-hidden">
-                            <p id="user-name" class="text-sm font-bold text-indigo-900 truncate">Student Name</p>
-                            <button id="logout-btn" class="text-xs text-indigo-500 hover:text-indigo-700 underline">Sign Out</button>
+                            <p id="user-name" class="text-sm font-bold text-white truncate">Student Name</p>
+                            <button id="logout-btn" class="text-xs text-indigo-400 hover:text-indigo-300 font-medium transition-colors">Sign Out</button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <nav class="mt-4 flex-1">
-                <button onclick="window.app.showPage('home')" id="nav-home" class="w-full flex items-center px-6 py-4 text-left hover:bg-slate-50 transition active-nav">
-                    <span class="mr-3">🏠</span> Home Dashboard
+            <nav class="mt-6 flex-1 px-4 space-y-2">
+                <button onclick="window.app.showPage('home')" id="nav-home" class="w-full flex items-center px-4 py-3 text-left rounded-lg hover:bg-slate-800 hover:text-white transition-all active-nav group">
+                    <span class="mr-3 text-xl group-hover:scale-110 transition-transform">🏠</span> 
+                    <span class="font-medium">Dashboard</span>
                 </button>
-                <button onclick="window.app.showPage('ch1')" id="nav-ch1" class="w-full flex items-center px-6 py-4 text-left hover:bg-slate-50 transition">
-                    <span class="mr-3">🔑</span> Ch 1: Making Decisions
+                <div class="pt-4 pb-2 px-4 text-xs font-bold text-slate-500 uppercase tracking-widest">Chapters</div>
+                <button onclick="window.app.showPage('ch1')" id="nav-ch1" class="w-full flex items-center px-4 py-3 text-left rounded-lg hover:bg-slate-800 hover:text-white transition-all group">
+                    <span class="mr-3 text-xl group-hover:scale-110 transition-transform">💡</span> 
+                    <span class="font-medium">Ch 1: Decisions</span>
                 </button>
-                <button onclick="window.app.showPage('ch2')" id="nav-ch2" class="w-full flex items-center px-6 py-4 text-left hover:bg-slate-50 transition text-slate-400 cursor-not-allowed">
-                    <span class="mr-3">📊</span> Ch 2: (Coming Soon)
+                <button onclick="window.app.showPage('ch2')" id="nav-ch2" class="w-full flex items-center px-4 py-3 text-left rounded-lg text-slate-600 cursor-not-allowed group opacity-50">
+                    <span class="mr-3 text-xl grayscale">📊</span> 
+                    <span class="font-medium">Ch 2: (Coming Soon)</span>
                 </button>
             </nav>
         </aside>
 
         <!-- Main Content Area -->
-        <main class="flex-1 p-4 md:p-10 relative">
+        <main class="flex-1 p-6 md:p-12 relative overflow-hidden bg-slate-50">
+            <!-- Decorative Background Blobs -->
+            <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+                <div class="absolute -top-[20%] -right-[10%] w-[600px] h-[600px] bg-indigo-200/40 rounded-full blur-3xl opacity-50"></div>
+                <div class="absolute top-[40%] -left-[10%] w-[400px] h-[400px] bg-purple-200/40 rounded-full blur-3xl opacity-50"></div>
+            </div>
             
             <!-- Notes Modal (Cheat Sheet) -->
-            <div id="notes-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-                <div class="bg-white rounded-xl shadow-2xl w-full max-w-3xl max-h-[85vh] overflow-y-auto">
-                    <div class="p-6 border-b flex justify-between items-center sticky top-0 bg-white">
-                        <h3 class="text-xl font-bold text-indigo-800">Chapter 1 Review Notes</h3>
-                        <button onclick="document.getElementById('notes-modal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600 font-bold text-xl">✕</button>
+            <div id="notes-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 transition-all duration-300">
+                <div class="glass-panel bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[85vh] overflow-y-auto transform transition-all scale-100">
+                    <div class="p-6 border-b border-slate-100 flex justify-between items-center sticky top-0 bg-white/95 backdrop-blur z-10">
+                        <div class="flex items-center gap-3">
+                            <span class="bg-amber-100 text-amber-600 p-2 rounded-lg text-xl">📖</span>
+                            <h3 class="text-xl font-bold text-slate-800">Chapter 1 Review Notes</h3>
+                        </div>
+                        <button onclick="document.getElementById('notes-modal').classList.add('hidden')" class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-700 transition">✕</button>
                     </div>
-                    <div class="p-6 text-sm text-slate-700 space-y-6">
+                    <div class="p-8 text-sm text-slate-600 space-y-6">
                         <!-- Section 1 -->
-                        <div class="bg-blue-50 p-4 rounded-lg">
-                            <h4 class="font-bold text-blue-900 mb-2">The Process & Influences</h4>
-                            <ul class="list-disc pl-5 space-y-1">
-                                <li><strong>5 Steps:</strong> Identify Problem → Gather Info → Consequences → Action → Evaluate.</li>
-                                <li><strong>Economic Influences:</strong> Interest Rates, Inflation, Unemployment, GDP.</li>
-                                <li><strong>Personal Influences:</strong> Age, Values, Family, Peers.</li>
-                                <li><strong>6 Specific Factors:</strong> Values, Peers, Habits, Feelings, Family, Risks/Consequences.</li>
+                        <div class="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 rounded-xl border border-blue-100 shadow-sm">
+                            <h4 class="font-bold text-blue-800 mb-3 text-lg flex items-center gap-2">
+                                <span class="w-1 h-6 bg-blue-500 rounded-full"></span>
+                                The Process & Influences
+                            </h4>
+                            <ul class="space-y-2 ml-2">
+                                <li class="flex gap-2"><span class="text-blue-500 font-bold">•</span><span><strong>5 Steps:</strong> Identify Problem → Gather Info → Consequences → Action → Evaluate.</span></li>
+                                <li class="flex gap-2"><span class="text-blue-500 font-bold">•</span><span><strong>Economic Influences:</strong> Interest Rates, Inflation, Unemployment, GDP.</span></li>
+                                <li class="flex gap-2"><span class="text-blue-500 font-bold">•</span><span><strong>Personal Influences:</strong> Age, Values, Family, Peers.</span></li>
+                                <li class="flex gap-2"><span class="text-blue-500 font-bold">•</span><span><strong>6 Specific Factors:</strong> Values, Peers, Habits, Feelings, Family, Risks/Consequences.</span></li>
                             </ul>
                         </div>
                         <!-- Section 2 -->
-                        <div class="bg-green-50 p-4 rounded-lg">
-                            <h4 class="font-bold text-green-900 mb-2">Money & Economy</h4>
-                            <ul class="list-disc pl-5 space-y-1">
-                                <li><strong>Interest Rates:</strong> High rates = Less borrowing, More saving. Low rates = More spending.</li>
-                                <li><strong>GDP:</strong> Total value of goods/services produced in the country.</li>
-                                <li><strong>Consumer Spending:</strong> Rises when employment is high and interest rates are low.</li>
+                        <div class="bg-gradient-to-br from-emerald-50 to-teal-50 p-6 rounded-xl border border-emerald-100 shadow-sm">
+                            <h4 class="font-bold text-emerald-800 mb-3 text-lg flex items-center gap-2">
+                                <span class="w-1 h-6 bg-emerald-500 rounded-full"></span>
+                                Money & Economy
+                            </h4>
+                            <ul class="space-y-2 ml-2">
+                                <li class="flex gap-2"><span class="text-emerald-500 font-bold">•</span><span><strong>Interest Rates:</strong> High rates = Less borrowing, More saving. Low rates = More spending.</span></li>
+                                <li class="flex gap-2"><span class="text-emerald-500 font-bold">•</span><span><strong>GDP:</strong> Total value of goods/services produced in the country.</span></li>
+                                <li class="flex gap-2"><span class="text-emerald-500 font-bold">•</span><span><strong>Consumer Spending:</strong> Rises when employment is high and interest rates are low.</span></li>
                             </ul>
                         </div>
                         <!-- Section 3 -->
-                        <div class="bg-purple-50 p-4 rounded-lg">
-                            <h4 class="font-bold text-purple-900 mb-2">Risks & Costs</h4>
-                            <ul class="list-disc pl-5 space-y-1">
-                                <li><strong>Opportunity Cost:</strong> What you give up when making a decision.</li>
-                                <li><strong>Personal Opp Cost:</strong> Time, health, energy.</li>
-                                <li><strong>Financial Opp Cost:</strong> Monetary value (interest lost).</li>
-                                <li><strong>Time Value of Money:</strong> Calculating increases in money over time (Interest).</li>
-                                <li><strong>Risks:</strong> Liquidity (Cash conversion), Inflation (Price rise), Personal (Safety).</li>
+                        <div class="bg-gradient-to-br from-purple-50 to-pink-50 p-6 rounded-xl border border-purple-100 shadow-sm">
+                            <h4 class="font-bold text-purple-800 mb-3 text-lg flex items-center gap-2">
+                                <span class="w-1 h-6 bg-purple-500 rounded-full"></span>
+                                Risks & Costs
+                            </h4>
+                            <ul class="space-y-2 ml-2">
+                                <li class="flex gap-2"><span class="text-purple-500 font-bold">•</span><span><strong>Opportunity Cost:</strong> What you give up when making a decision.</span></li>
+                                <li class="flex gap-2"><span class="text-purple-500 font-bold">•</span><span><strong>Time Value of Money:</strong> Calculating interest earned over time.</span></li>
+                                <li class="flex gap-2"><span class="text-purple-500 font-bold">•</span><span><strong>Risks:</strong> Liquidity (Cash conversion), Inflation (Price rise), Personal (Safety).</span></li>
                             </ul>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div id="content-area" class="max-w-4xl mx-auto">
+            <div id="content-area" class="max-w-5xl mx-auto relative z-10">
                 
                 <!-- HOME DASHBOARD -->
                 <section id="page-home" class="fade-in">
-                    <div class="bg-white rounded-2xl shadow-sm p-8 mb-6 border border-slate-200">
-                        <h1 class="text-3xl font-extrabold text-slate-800 mb-4">Welcome to the Interactive Review Hub</h1>
-                        <p class="text-slate-600 leading-relaxed mb-6">
-                            This site is designed to help you prepare for your chapter tests through interactive games. 
-                            <span id="login-prompt" class="font-bold text-indigo-600">Sign in to save your progress!</span>
-                        </p>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div class="p-6 border rounded-xl bg-indigo-50 border-indigo-100">
-                                <h3 class="font-bold text-indigo-900">Current Progress</h3>
-                                <p id="completion-status" class="text-sm text-indigo-700 mt-1">Loading progress...</p>
+                    <div class="bg-white rounded-3xl shadow-xl shadow-indigo-100/50 p-10 mb-8 border border-white/50">
+                        <div class="max-w-2xl">
+                            <h1 class="text-4xl font-extrabold text-slate-900 mb-4 tracking-tight">Welcome Back, Student.</h1>
+                            <p class="text-slate-500 text-lg leading-relaxed mb-8">
+                                Ready to master Personal Finance? Select a chapter from the sidebar to begin your review session.
+                                <span id="login-prompt" class="block mt-2 text-indigo-600 font-semibold flex items-center gap-2">
+                                    <span class="w-2 h-2 bg-indigo-500 rounded-full animate-pulse"></span> 
+                                    Sign in to track your mastery.
+                                </span>
+                            </p>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="p-8 rounded-2xl bg-gradient-to-br from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-500/20 transform hover:-translate-y-1 transition-transform">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h3 class="font-bold text-lg opacity-90">Your Progress</h3>
+                                    <span class="bg-white/20 p-2 rounded-lg">📈</span>
+                                </div>
+                                <p id="completion-status" class="text-2xl font-bold">0 Chapters</p>
+                                <p class="text-indigo-100 text-sm mt-1">Keep going!</p>
                             </div>
-                            <div class="p-6 border rounded-xl bg-slate-50 border-slate-200">
-                                <h3 class="font-bold text-slate-800">Next Up</h3>
-                                <p class="text-sm text-slate-600 mt-1">Complete Chapter 1: Decision Making.</p>
+                            
+                            <div class="p-8 rounded-2xl bg-white border border-slate-100 shadow-lg shadow-slate-200/50 hover:border-indigo-100 transition-colors">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h3 class="font-bold text-slate-800 text-lg">Recommended</h3>
+                                    <span class="bg-emerald-100 text-emerald-600 p-2 rounded-lg">🎯</span>
+                                </div>
+                                <p class="text-slate-600 mb-4">Start with the basics of decision making.</p>
+                                <button onclick="window.app.showPage('ch1')" class="text-indigo-600 font-bold text-sm hover:underline flex items-center gap-1">
+                                    Go to Chapter 1 <span>→</span>
+                                </button>
                             </div>
                         </div>
                     </div>
                 </section>
 
-                <!-- CHAPTER 1: FULL REVIEW GAME -->
+                <!-- CHAPTER 1: MODERN GAME -->
                 <section id="page-ch1" class="fade-in hidden">
-                    <div class="bg-white rounded-2xl shadow-xl p-8 min-h-[600px] border border-slate-200 relative">
+                    <div class="bg-white rounded-3xl shadow-2xl shadow-indigo-100/50 min-h-[600px] border border-white/50 relative overflow-hidden flex flex-col">
                         
                         <!-- Header -->
-                        <div class="flex justify-between items-start mb-8">
+                        <div class="p-8 md:p-10 border-b border-slate-100 bg-white/50 backdrop-blur-sm sticky top-0 z-10 flex justify-between items-start">
                             <div>
-                                <h2 class="text-2xl font-bold text-indigo-700">Chapter 1 Review Challenge</h2>
-                                <p class="text-slate-500 text-sm">10 Questions covering your Lesson Review Sheet</p>
+                                <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">Chapter 1 Challenge</h2>
+                                <p class="text-slate-500 font-medium mt-1">Topic: Decision Making & Risks</p>
                             </div>
-                            <button onclick="document.getElementById('notes-modal').classList.remove('hidden')" class="text-xs bg-amber-100 hover:bg-amber-200 text-amber-800 px-4 py-2 rounded-full border border-amber-200 font-bold transition">
-                                📖 Open Cheat Sheet
+                            <button onclick="document.getElementById('notes-modal').classList.remove('hidden')" class="group flex items-center gap-2 bg-amber-50 hover:bg-amber-100 text-amber-700 px-5 py-2.5 rounded-full font-bold transition-all shadow-sm border border-amber-100">
+                                <span class="text-xl">💡</span> 
+                                <span class="group-hover:translate-x-0.5 transition-transform">Cheat Sheet</span>
                             </button>
                         </div>
 
-                        <!-- Progress -->
-                        <div class="w-full bg-slate-100 rounded-full h-2 mb-8">
-                            <div id="ch1-progress" class="bg-indigo-600 h-2 rounded-full transition-all duration-500" style="width: 5%"></div>
+                        <!-- Progress Bar -->
+                        <div class="h-1.5 w-full bg-slate-100">
+                            <div id="ch1-progress" class="h-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 transition-all duration-700 ease-out shadow-[0_0_10px_rgba(99,102,241,0.5)]" style="width: 5%"></div>
                         </div>
 
                         <!-- Game Container -->
-                        <div id="ch1-game-container">
+                        <div id="ch1-game-container" class="p-8 md:p-12 flex-1 flex flex-col justify-center max-w-3xl mx-auto w-full">
                             
-                            <!-- Q1 -->
-                            <div id="ch1-q1" class="ch1-stage">
-                                <span class="text-xs font-bold text-indigo-500 uppercase">Question 1 / 10</span>
-                                <p class="text-xl mt-2 mb-6 font-medium">According to Review Question #3: What is the <strong>very first step</strong> in the decision-making process?</p>
-                                <div class="grid gap-3">
-                                    <button onclick="window.app.handleCh1(1, 'A')" class="p-4 border-2 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 text-left transition">Evaluate the results</button>
-                                    <button onclick="window.app.handleCh1(1, 'B')" class="p-4 border-2 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 text-left transition">Identify the problem</button>
-                                    <button onclick="window.app.handleCh1(1, 'C')" class="p-4 border-2 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 text-left transition">Gather information</button>
+                            <!-- Question Card Template -->
+                            <div id="ch1-q1" class="ch1-stage animate-fade-in">
+                                <div class="inline-block px-3 py-1 rounded-full bg-indigo-50 text-indigo-600 text-xs font-bold uppercase tracking-wider mb-4">Question 1 of 10</div>
+                                <h3 class="text-2xl font-bold text-slate-800 mb-8 leading-snug">According to Review Question #3: What is the <span class="text-indigo-600">very first step</span> in the decision-making process?</h3>
+                                <div class="grid gap-4">
+                                    <button onclick="window.app.handleCh1(1, 'A')" class="group text-left p-5 rounded-xl border-2 border-slate-100 hover:border-indigo-500 hover:bg-indigo-50/50 transition-all duration-200 flex items-center gap-4">
+                                        <div class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 font-bold flex items-center justify-center group-hover:bg-indigo-500 group-hover:text-white transition-colors">A</div>
+                                        <span class="font-medium text-slate-700 group-hover:text-indigo-900">Evaluate the results</span>
+                                    </button>
+                                    <button onclick="window.app.handleCh1(1, 'B')" class="group text-left p-5 rounded-xl border-2 border-slate-100 hover:border-indigo-500 hover:bg-indigo-50/50 transition-all duration-200 flex items-center gap-4">
+                                        <div class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 font-bold flex items-center justify-center group-hover:bg-indigo-500 group-hover:text-white transition-colors">B</div>
+                                        <span class="font-medium text-slate-700 group-hover:text-indigo-900">Identify the problem</span>
+                                    </button>
+                                    <button onclick="window.app.handleCh1(1, 'C')" class="group text-left p-5 rounded-xl border-2 border-slate-100 hover:border-indigo-500 hover:bg-indigo-50/50 transition-all duration-200 flex items-center gap-4">
+                                        <div class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 font-bold flex items-center justify-center group-hover:bg-indigo-500 group-hover:text-white transition-colors">C</div>
+                                        <span class="font-medium text-slate-700 group-hover:text-indigo-900">Gather information</span>
+                                    </button>
                                 </div>
                             </div>
 
                             <!-- Q2 -->
-                            <div id="ch1-q2" class="ch1-stage hidden">
-                                <span class="text-xs font-bold text-indigo-500 uppercase">Question 2 / 10</span>
-                                <p class="text-xl mt-2 mb-6 font-medium">From Review Question #6: Is <strong>Procrastination</strong> considered an Economic or Personal influence?</p>
-                                <div class="grid gap-3">
-                                    <button onclick="window.app.handleCh1(2, 'A')" class="p-4 border-2 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 text-left transition">Economic Influence</button>
-                                    <button onclick="window.app.handleCh1(2, 'B')" class="p-4 border-2 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 text-left transition">Personal Influence</button>
+                            <div id="ch1-q2" class="ch1-stage hidden animate-fade-in">
+                                <div class="inline-block px-3 py-1 rounded-full bg-indigo-50 text-indigo-600 text-xs font-bold uppercase tracking-wider mb-4">Question 2 of 10</div>
+                                <h3 class="text-2xl font-bold text-slate-800 mb-8 leading-snug">Is <strong>Procrastination</strong> considered an Economic or Personal influence?</h3>
+                                <div class="grid gap-4">
+                                    <button onclick="window.app.handleCh1(2, 'A')" class="group text-left p-5 rounded-xl border-2 border-slate-100 hover:border-indigo-500 hover:bg-indigo-50/50 transition-all duration-200 flex items-center gap-4">
+                                        <div class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 font-bold flex items-center justify-center group-hover:bg-indigo-500 group-hover:text-white transition-colors">A</div>
+                                        <span class="font-medium text-slate-700 group-hover:text-indigo-900">Economic Influence</span>
+                                    </button>
+                                    <button onclick="window.app.handleCh1(2, 'B')" class="group text-left p-5 rounded-xl border-2 border-slate-100 hover:border-indigo-500 hover:bg-indigo-50/50 transition-all duration-200 flex items-center gap-4">
+                                        <div class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 font-bold flex items-center justify-center group-hover:bg-indigo-500 group-hover:text-white transition-colors">B</div>
+                                        <span class="font-medium text-slate-700 group-hover:text-indigo-900">Personal Influence</span>
+                                    </button>
                                 </div>
                             </div>
 
                             <!-- Q3 -->
-                            <div id="ch1-q3" class="ch1-stage hidden">
-                                <span class="text-xs font-bold text-indigo-500 uppercase">Question 3 / 10</span>
-                                <p class="text-xl mt-2 mb-6 font-medium">From Review Question #7: What does <strong>Higher Interest Rates</strong> usually result in?</p>
-                                <div class="grid gap-3">
-                                    <button onclick="window.app.handleCh1(3, 'A')" class="p-4 border-2 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 text-left transition">Higher consumer spending</button>
-                                    <button onclick="window.app.handleCh1(3, 'B')" class="p-4 border-2 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 text-left transition">Less borrowing (money is expensive)</button>
-                                    <button onclick="window.app.handleCh1(3, 'C')" class="p-4 border-2 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 text-left transition">More people buying houses</button>
+                            <div id="ch1-q3" class="ch1-stage hidden animate-fade-in">
+                                <div class="inline-block px-3 py-1 rounded-full bg-indigo-50 text-indigo-600 text-xs font-bold uppercase tracking-wider mb-4">Question 3 of 10</div>
+                                <h3 class="text-2xl font-bold text-slate-800 mb-8 leading-snug">What does <strong>Higher Interest Rates</strong> usually result in?</h3>
+                                <div class="grid gap-4">
+                                    <button onclick="window.app.handleCh1(3, 'A')" class="group text-left p-5 rounded-xl border-2 border-slate-100 hover:border-indigo-500 hover:bg-indigo-50/50 transition-all duration-200 flex items-center gap-4">
+                                        <div class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 font-bold flex items-center justify-center group-hover:bg-indigo-500 group-hover:text-white transition-colors">A</div>
+                                        <span class="font-medium text-slate-700 group-hover:text-indigo-900">Higher consumer spending</span>
+                                    </button>
+                                    <button onclick="window.app.handleCh1(3, 'B')" class="group text-left p-5 rounded-xl border-2 border-slate-100 hover:border-indigo-500 hover:bg-indigo-50/50 transition-all duration-200 flex items-center gap-4">
+                                        <div class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 font-bold flex items-center justify-center group-hover:bg-indigo-500 group-hover:text-white transition-colors">B</div>
+                                        <span class="font-medium text-slate-700 group-hover:text-indigo-900">Less borrowing (money is expensive)</span>
+                                    </button>
+                                    <button onclick="window.app.handleCh1(3, 'C')" class="group text-left p-5 rounded-xl border-2 border-slate-100 hover:border-indigo-500 hover:bg-indigo-50/50 transition-all duration-200 flex items-center gap-4">
+                                        <div class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 font-bold flex items-center justify-center group-hover:bg-indigo-500 group-hover:text-white transition-colors">C</div>
+                                        <span class="font-medium text-slate-700 group-hover:text-indigo-900">More people buying houses</span>
+                                    </button>
                                 </div>
                             </div>
 
                             <!-- Q4 -->
-                            <div id="ch1-q4" class="ch1-stage hidden">
-                                <span class="text-xs font-bold text-indigo-500 uppercase">Question 4 / 10</span>
-                                <p class="text-xl mt-2 mb-6 font-medium">From Review Question #10: What does <strong>Gross Domestic Product (GDP)</strong> measure?</p>
-                                <div class="grid gap-3">
-                                    <button onclick="window.app.handleCh1(4, 'A')" class="p-4 border-2 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 text-left transition">The total value of goods/services produced in the country</button>
-                                    <button onclick="window.app.handleCh1(4, 'B')" class="p-4 border-2 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 text-left transition">The unemployment rate</button>
-                                    <button onclick="window.app.handleCh1(4, 'C')" class="p-4 border-2 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 text-left transition">Changes in the buying power of the dollar</button>
+                            <div id="ch1-q4" class="ch1-stage hidden animate-fade-in">
+                                <div class="inline-block px-3 py-1 rounded-full bg-indigo-50 text-indigo-600 text-xs font-bold uppercase tracking-wider mb-4">Question 4 of 10</div>
+                                <h3 class="text-2xl font-bold text-slate-800 mb-8 leading-snug">What does <strong>Gross Domestic Product (GDP)</strong> measure?</h3>
+                                <div class="grid gap-4">
+                                    <button onclick="window.app.handleCh1(4, 'A')" class="group text-left p-5 rounded-xl border-2 border-slate-100 hover:border-indigo-500 hover:bg-indigo-50/50 transition-all duration-200 flex items-center gap-4">
+                                        <div class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 font-bold flex items-center justify-center group-hover:bg-indigo-500 group-hover:text-white transition-colors">A</div>
+                                        <span class="font-medium text-slate-700 group-hover:text-indigo-900">Total value of goods/services produced in the country</span>
+                                    </button>
+                                    <button onclick="window.app.handleCh1(4, 'B')" class="group text-left p-5 rounded-xl border-2 border-slate-100 hover:border-indigo-500 hover:bg-indigo-50/50 transition-all duration-200 flex items-center gap-4">
+                                        <div class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 font-bold flex items-center justify-center group-hover:bg-indigo-500 group-hover:text-white transition-colors">B</div>
+                                        <span class="font-medium text-slate-700 group-hover:text-indigo-900">The unemployment rate</span>
+                                    </button>
+                                    <button onclick="window.app.handleCh1(4, 'C')" class="group text-left p-5 rounded-xl border-2 border-slate-100 hover:border-indigo-500 hover:bg-indigo-50/50 transition-all duration-200 flex items-center gap-4">
+                                        <div class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 font-bold flex items-center justify-center group-hover:bg-indigo-500 group-hover:text-white transition-colors">C</div>
+                                        <span class="font-medium text-slate-700 group-hover:text-indigo-900">Changes in the buying power of the dollar</span>
+                                    </button>
                                 </div>
                             </div>
 
-                            <!-- Q5 -->
-                            <div id="ch1-q5" class="ch1-stage hidden">
-                                <span class="text-xs font-bold text-indigo-500 uppercase">Question 5 / 10</span>
-                                <p class="text-xl mt-2 mb-6 font-medium">From Review Question #12: Is <strong>Unemployment</strong> considered an Economic or Personal influence?</p>
-                                <div class="grid gap-3">
-                                    <button onclick="window.app.handleCh1(5, 'A')" class="p-4 border-2 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 text-left transition">Economic Influence</button>
-                                    <button onclick="window.app.handleCh1(5, 'B')" class="p-4 border-2 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 text-left transition">Personal Influence</button>
+                             <!-- Q5 -->
+                             <div id="ch1-q5" class="ch1-stage hidden animate-fade-in">
+                                <div class="inline-block px-3 py-1 rounded-full bg-indigo-50 text-indigo-600 text-xs font-bold uppercase tracking-wider mb-4">Question 5 of 10</div>
+                                <h3 class="text-2xl font-bold text-slate-800 mb-8 leading-snug">Is <strong>Unemployment</strong> considered an Economic or Personal influence?</h3>
+                                <div class="grid gap-4">
+                                    <button onclick="window.app.handleCh1(5, 'A')" class="group text-left p-5 rounded-xl border-2 border-slate-100 hover:border-indigo-500 hover:bg-indigo-50/50 transition-all duration-200 flex items-center gap-4">
+                                        <div class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 font-bold flex items-center justify-center group-hover:bg-indigo-500 group-hover:text-white transition-colors">A</div>
+                                        <span class="font-medium text-slate-700 group-hover:text-indigo-900">Economic Influence</span>
+                                    </button>
+                                    <button onclick="window.app.handleCh1(5, 'B')" class="group text-left p-5 rounded-xl border-2 border-slate-100 hover:border-indigo-500 hover:bg-indigo-50/50 transition-all duration-200 flex items-center gap-4">
+                                        <div class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 font-bold flex items-center justify-center group-hover:bg-indigo-500 group-hover:text-white transition-colors">B</div>
+                                        <span class="font-medium text-slate-700 group-hover:text-indigo-900">Personal Influence</span>
+                                    </button>
                                 </div>
                             </div>
 
                             <!-- Q6 -->
-                            <div id="ch1-q6" class="ch1-stage hidden">
-                                <span class="text-xs font-bold text-indigo-500 uppercase">Question 6 / 10</span>
-                                <p class="text-xl mt-2 mb-6 font-medium">From Review Question #8: Which risk involves "difficulty converting an investment to cash quickly"?</p>
-                                <div class="grid gap-3">
-                                    <button onclick="window.app.handleCh1(6, 'A')" class="p-4 border-2 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 text-left transition">Inflation Risk</button>
-                                    <button onclick="window.app.handleCh1(6, 'B')" class="p-4 border-2 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 text-left transition">Liquidity Risk</button>
-                                    <button onclick="window.app.handleCh1(6, 'C')" class="p-4 border-2 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 text-left transition">Personal Risk</button>
+                            <div id="ch1-q6" class="ch1-stage hidden animate-fade-in">
+                                <div class="inline-block px-3 py-1 rounded-full bg-indigo-50 text-indigo-600 text-xs font-bold uppercase tracking-wider mb-4">Question 6 of 10</div>
+                                <h3 class="text-2xl font-bold text-slate-800 mb-8 leading-snug">Which risk involves "difficulty converting an investment to cash quickly"?</h3>
+                                <div class="grid gap-4">
+                                    <button onclick="window.app.handleCh1(6, 'A')" class="group text-left p-5 rounded-xl border-2 border-slate-100 hover:border-indigo-500 hover:bg-indigo-50/50 transition-all duration-200 flex items-center gap-4">
+                                        <div class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 font-bold flex items-center justify-center group-hover:bg-indigo-500 group-hover:text-white transition-colors">A</div>
+                                        <span class="font-medium text-slate-700 group-hover:text-indigo-900">Inflation Risk</span>
+                                    </button>
+                                    <button onclick="window.app.handleCh1(6, 'B')" class="group text-left p-5 rounded-xl border-2 border-slate-100 hover:border-indigo-500 hover:bg-indigo-50/50 transition-all duration-200 flex items-center gap-4">
+                                        <div class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 font-bold flex items-center justify-center group-hover:bg-indigo-500 group-hover:text-white transition-colors">B</div>
+                                        <span class="font-medium text-slate-700 group-hover:text-indigo-900">Liquidity Risk</span>
+                                    </button>
+                                    <button onclick="window.app.handleCh1(6, 'C')" class="group text-left p-5 rounded-xl border-2 border-slate-100 hover:border-indigo-500 hover:bg-indigo-50/50 transition-all duration-200 flex items-center gap-4">
+                                        <div class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 font-bold flex items-center justify-center group-hover:bg-indigo-500 group-hover:text-white transition-colors">C</div>
+                                        <span class="font-medium text-slate-700 group-hover:text-indigo-900">Personal Risk</span>
+                                    </button>
                                 </div>
                             </div>
 
                             <!-- Q7 -->
-                            <div id="ch1-q7" class="ch1-stage hidden">
-                                <span class="text-xs font-bold text-indigo-500 uppercase">Question 7 / 10</span>
-                                <p class="text-xl mt-2 mb-6 font-medium">From Review Question #2: What is the term for "what a person gives up when making a decision"?</p>
-                                <div class="grid gap-3">
-                                    <button onclick="window.app.handleCh1(7, 'A')" class="p-4 border-2 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 text-left transition">Opportunity Cost</button>
-                                    <button onclick="window.app.handleCh1(7, 'B')" class="p-4 border-2 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 text-left transition">Sunk Cost</button>
-                                    <button onclick="window.app.handleCh1(7, 'C')" class="p-4 border-2 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 text-left transition">Liabilities</button>
+                            <div id="ch1-q7" class="ch1-stage hidden animate-fade-in">
+                                <div class="inline-block px-3 py-1 rounded-full bg-indigo-50 text-indigo-600 text-xs font-bold uppercase tracking-wider mb-4">Question 7 of 10</div>
+                                <h3 class="text-2xl font-bold text-slate-800 mb-8 leading-snug">What is the term for "what a person gives up when making a decision"?</h3>
+                                <div class="grid gap-4">
+                                    <button onclick="window.app.handleCh1(7, 'A')" class="group text-left p-5 rounded-xl border-2 border-slate-100 hover:border-indigo-500 hover:bg-indigo-50/50 transition-all duration-200 flex items-center gap-4">
+                                        <div class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 font-bold flex items-center justify-center group-hover:bg-indigo-500 group-hover:text-white transition-colors">A</div>
+                                        <span class="font-medium text-slate-700 group-hover:text-indigo-900">Opportunity Cost</span>
+                                    </button>
+                                    <button onclick="window.app.handleCh1(7, 'B')" class="group text-left p-5 rounded-xl border-2 border-slate-100 hover:border-indigo-500 hover:bg-indigo-50/50 transition-all duration-200 flex items-center gap-4">
+                                        <div class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 font-bold flex items-center justify-center group-hover:bg-indigo-500 group-hover:text-white transition-colors">B</div>
+                                        <span class="font-medium text-slate-700 group-hover:text-indigo-900">Sunk Cost</span>
+                                    </button>
                                 </div>
                             </div>
 
                             <!-- Q8 -->
-                            <div id="ch1-q8" class="ch1-stage hidden">
-                                <span class="text-xs font-bold text-indigo-500 uppercase">Question 8 / 10</span>
-                                <p class="text-xl mt-2 mb-6 font-medium">From Review Question #14: Which type of Opportunity Cost involves "Time, Health, or Energy"?</p>
-                                <div class="grid gap-3">
-                                    <button onclick="window.app.handleCh1(8, 'A')" class="p-4 border-2 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 text-left transition">Personal Opportunity Cost</button>
-                                    <button onclick="window.app.handleCh1(8, 'B')" class="p-4 border-2 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 text-left transition">Financial Opportunity Cost</button>
+                            <div id="ch1-q8" class="ch1-stage hidden animate-fade-in">
+                                <div class="inline-block px-3 py-1 rounded-full bg-indigo-50 text-indigo-600 text-xs font-bold uppercase tracking-wider mb-4">Question 8 of 10</div>
+                                <h3 class="text-2xl font-bold text-slate-800 mb-8 leading-snug">Which type of Opportunity Cost involves "Time, Health, or Energy"?</h3>
+                                <div class="grid gap-4">
+                                    <button onclick="window.app.handleCh1(8, 'A')" class="group text-left p-5 rounded-xl border-2 border-slate-100 hover:border-indigo-500 hover:bg-indigo-50/50 transition-all duration-200 flex items-center gap-4">
+                                        <div class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 font-bold flex items-center justify-center group-hover:bg-indigo-500 group-hover:text-white transition-colors">A</div>
+                                        <span class="font-medium text-slate-700 group-hover:text-indigo-900">Personal Opportunity Cost</span>
+                                    </button>
+                                    <button onclick="window.app.handleCh1(8, 'B')" class="group text-left p-5 rounded-xl border-2 border-slate-100 hover:border-indigo-500 hover:bg-indigo-50/50 transition-all duration-200 flex items-center gap-4">
+                                        <div class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 font-bold flex items-center justify-center group-hover:bg-indigo-500 group-hover:text-white transition-colors">B</div>
+                                        <span class="font-medium text-slate-700 group-hover:text-indigo-900">Financial Opportunity Cost</span>
+                                    </button>
                                 </div>
                             </div>
 
                             <!-- Q9 -->
-                            <div id="ch1-q9" class="ch1-stage hidden">
-                                <span class="text-xs font-bold text-indigo-500 uppercase">Question 9 / 10</span>
-                                <p class="text-xl mt-2 mb-6 font-medium">From Review Question #1: "Time Value of Money" calculations (like Interest) are used to measure:</p>
-                                <div class="grid gap-3">
-                                    <button onclick="window.app.handleCh1(9, 'A')" class="p-4 border-2 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 text-left transition">Financial Opportunity Costs</button>
-                                    <button onclick="window.app.handleCh1(9, 'B')" class="p-4 border-2 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 text-left transition">Personal Opportunity Costs</button>
+                            <div id="ch1-q9" class="ch1-stage hidden animate-fade-in">
+                                <div class="inline-block px-3 py-1 rounded-full bg-indigo-50 text-indigo-600 text-xs font-bold uppercase tracking-wider mb-4">Question 9 of 10</div>
+                                <h3 class="text-2xl font-bold text-slate-800 mb-8 leading-snug">"Time Value of Money" calculations (like Interest) are used to measure:</h3>
+                                <div class="grid gap-4">
+                                    <button onclick="window.app.handleCh1(9, 'A')" class="group text-left p-5 rounded-xl border-2 border-slate-100 hover:border-indigo-500 hover:bg-indigo-50/50 transition-all duration-200 flex items-center gap-4">
+                                        <div class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 font-bold flex items-center justify-center group-hover:bg-indigo-500 group-hover:text-white transition-colors">A</div>
+                                        <span class="font-medium text-slate-700 group-hover:text-indigo-900">Financial Opportunity Costs</span>
+                                    </button>
+                                    <button onclick="window.app.handleCh1(9, 'B')" class="group text-left p-5 rounded-xl border-2 border-slate-100 hover:border-indigo-500 hover:bg-indigo-50/50 transition-all duration-200 flex items-center gap-4">
+                                        <div class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 font-bold flex items-center justify-center group-hover:bg-indigo-500 group-hover:text-white transition-colors">B</div>
+                                        <span class="font-medium text-slate-700 group-hover:text-indigo-900">Personal Opportunity Costs</span>
+                                    </button>
                                 </div>
                             </div>
 
-                             <!-- Q10 -->
-                             <div id="ch1-q10" class="ch1-stage hidden">
-                                <span class="text-xs font-bold text-indigo-500 uppercase">Question 10 / 10</span>
-                                <p class="text-xl mt-2 mb-6 font-medium">From Review Question #15: Which of these is NOT one of the 6 factors that influence a decision?</p>
-                                <div class="grid gap-3">
-                                    <button onclick="window.app.handleCh1(10, 'A')" class="p-4 border-2 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 text-left transition">Values & Peers</button>
-                                    <button onclick="window.app.handleCh1(10, 'B')" class="p-4 border-2 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 text-left transition">Habits & Feelings</button>
-                                    <button onclick="window.app.handleCh1(10, 'C')" class="p-4 border-2 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 text-left transition">Weather & Traffic</button>
+                            <!-- Q10 -->
+                            <div id="ch1-q10" class="ch1-stage hidden animate-fade-in">
+                                <div class="inline-block px-3 py-1 rounded-full bg-indigo-50 text-indigo-600 text-xs font-bold uppercase tracking-wider mb-4">Question 10 of 10</div>
+                                <h3 class="text-2xl font-bold text-slate-800 mb-8 leading-snug">Which of these is NOT one of the 6 factors that influence a decision?</h3>
+                                <div class="grid gap-4">
+                                    <button onclick="window.app.handleCh1(10, 'A')" class="group text-left p-5 rounded-xl border-2 border-slate-100 hover:border-indigo-500 hover:bg-indigo-50/50 transition-all duration-200 flex items-center gap-4">
+                                        <div class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 font-bold flex items-center justify-center group-hover:bg-indigo-500 group-hover:text-white transition-colors">A</div>
+                                        <span class="font-medium text-slate-700 group-hover:text-indigo-900">Values & Peers</span>
+                                    </button>
+                                    <button onclick="window.app.handleCh1(10, 'B')" class="group text-left p-5 rounded-xl border-2 border-slate-100 hover:border-indigo-500 hover:bg-indigo-50/50 transition-all duration-200 flex items-center gap-4">
+                                        <div class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 font-bold flex items-center justify-center group-hover:bg-indigo-500 group-hover:text-white transition-colors">B</div>
+                                        <span class="font-medium text-slate-700 group-hover:text-indigo-900">Habits & Feelings</span>
+                                    </button>
+                                    <button onclick="window.app.handleCh1(10, 'C')" class="group text-left p-5 rounded-xl border-2 border-slate-100 hover:border-indigo-500 hover:bg-indigo-50/50 transition-all duration-200 flex items-center gap-4">
+                                        <div class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 font-bold flex items-center justify-center group-hover:bg-indigo-500 group-hover:text-white transition-colors">C</div>
+                                        <span class="font-medium text-slate-700 group-hover:text-indigo-900">Weather & Traffic</span>
+                                    </button>
                                 </div>
                             </div>
 
                             <!-- Success Screen -->
-                            <div id="ch1-success" class="ch1-stage hidden text-center py-10">
-                                <span class="text-6xl">🏆</span>
-                                <h3 class="text-3xl font-bold mt-6 text-slate-800">Review Complete!</h3>
-                                <p class="text-slate-500 mb-8 mt-2">You have mastered the Chapter 1 Review Sheet.</p>
-                                <button onclick="window.app.showPage('home')" class="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-3 rounded-xl font-bold transition shadow-lg">Return to Dashboard</button>
+                            <div id="ch1-success" class="ch1-stage hidden text-center py-12 animate-fade-in">
+                                <div class="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center text-5xl mx-auto mb-6 shadow-lg shadow-green-100">🏆</div>
+                                <h3 class="text-4xl font-extrabold text-slate-900 mb-2">Excellent Work!</h3>
+                                <p class="text-slate-500 text-lg mb-8 max-w-md mx-auto">You've mastered the Chapter 1 definitions and concepts. Your progress has been saved.</p>
+                                <button onclick="window.app.showPage('home')" class="bg-gradient-to-r from-slate-900 to-slate-800 text-white px-8 py-4 rounded-xl font-bold shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300">
+                                    Return to Dashboard
+                                </button>
                             </div>
 
                             <!-- Feedback Area -->
-                            <div id="ch1-feedback" class="mt-6 p-4 rounded-xl hidden text-center font-medium border-2"></div>
+                            <div id="ch1-feedback" class="mt-8 p-4 rounded-xl hidden text-center font-bold text-lg shadow-lg transform transition-all"></div>
 
                         </div>
                     </div>
@@ -277,9 +430,6 @@
         import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // ============================================================
-        // 🔴 TEACHER: FIREBASE CONFIG INSERTED BELOW
-        // ============================================================
         const firebaseConfig = {
             apiKey: "AIzaSyD_Vj-V_oQOLxEfCCgerD6BanWa14PVrDY",
             authDomain: "financial-literacy-review.firebaseapp.com",
@@ -288,19 +438,21 @@
             messagingSenderId: "257043610594",
             appId: "1:257043610594:web:8113cb60be0522a23c17bb"
         };
-        // ============================================================
 
         let auth, db, user = null;
         let isFirebaseActive = false;
         let localCompleted = JSON.parse(localStorage.getItem('completedCh')) || [];
         
-        // Define app functions immediately so UI is clickable even if Firebase fails
         window.app = {
             showPage: (pageId) => {
                 document.querySelectorAll('section').forEach(sec => sec.classList.add('hidden'));
-                document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active-nav'));
+                document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active-nav', 'bg-slate-800', 'text-white'));
+                
                 document.getElementById('page-' + pageId).classList.remove('hidden');
-                document.getElementById('nav-' + pageId).classList.add('active-nav');
+                
+                const navBtn = document.getElementById('nav-' + pageId);
+                if(navBtn) navBtn.classList.add('active-nav');
+                
                 if (pageId === 'home') updateDashboard();
             },
 
@@ -326,35 +478,36 @@
                 const feedback = document.getElementById('ch1-feedback');
                 const isCorrect = choice === answers[step];
 
-                feedback.classList.remove('hidden', 'bg-red-50', 'text-red-700', 'bg-green-50', 'text-green-700', 'border-red-200', 'border-green-200');
+                feedback.classList.remove('hidden', 'bg-red-50', 'text-red-600', 'bg-green-50', 'text-green-600', 'scale-100', 'translate-y-2');
+                feedback.classList.add('animate-fade-in');
                 
                 if (isCorrect) {
-                    feedback.innerText = "Correct! ✅";
-                    feedback.classList.add('bg-green-50', 'text-green-700', 'border-green-200');
+                    feedback.innerHTML = `<span class="text-2xl mr-2">✅</span> Correct!`;
+                    feedback.className = "mt-8 p-4 rounded-xl text-center font-bold text-lg shadow-lg bg-green-50 text-green-700 border border-green-200 transform transition-all scale-105";
                     
                     setTimeout(() => {
                         feedback.classList.add('hidden');
+                        feedback.classList.remove('scale-105');
                         document.getElementById(`ch1-q${step}`).classList.add('hidden');
                         const next = step + 1;
                         
-                        // Update Progress Bar
                         document.getElementById('ch1-progress').style.width = (next / 11 * 100) + '%';
 
                         if (next <= 10) {
-                            document.getElementById(`ch1-q${next}`).classList.remove('hidden');
+                            const nextQ = document.getElementById(`ch1-q${next}`);
+                            nextQ.classList.remove('hidden');
                         } else {
                             document.getElementById('ch1-success').classList.remove('hidden');
                             markChapterComplete('Chapter 1');
                         }
-                    }, 1000);
+                    }, 1200);
                 } else {
-                    feedback.innerText = "Try again. " + hints[step];
-                    feedback.classList.add('bg-red-50', 'text-red-700', 'border-red-200');
+                    feedback.innerHTML = `<span class="text-2xl mr-2">❌</span> ${hints[step]}`;
+                    feedback.className = "mt-8 p-4 rounded-xl text-center font-bold text-lg shadow-lg bg-red-50 text-red-700 border border-red-200";
                 }
             }
         };
 
-        // Initialize Firebase safely
         try {
             if (firebaseConfig.apiKey.includes("REPLACE")) {
                 console.warn("Firebase config not set.");
@@ -364,7 +517,6 @@
                 db = getFirestore(app);
                 isFirebaseActive = true;
                 
-                // Auth Listener
                 onAuthStateChanged(auth, async (currentUser) => {
                     user = currentUser;
                     updateUIForUser();
@@ -416,28 +568,25 @@
         function updateDashboard() {
             const status = document.getElementById('completion-status');
             if (localCompleted.length > 0) {
-                status.innerText = `Chapters Completed: ${localCompleted.join(', ')}`;
+                status.innerText = `${localCompleted.length} Chapter${localCompleted.length !== 1 ? 's' : ''}`;
             } else {
-                status.innerText = "You haven't completed any chapters yet.";
+                status.innerText = "0 Chapters";
             }
         }
 
         function updateUIForUser() {
             const loginUI = document.getElementById('login-ui');
             const userInfo = document.getElementById('user-info');
-            const loginPrompt = document.getElementById('login-prompt');
             
             if (user) {
                 loginUI.classList.add('hidden');
                 userInfo.classList.remove('hidden');
                 document.getElementById('user-photo').src = user.photoURL || '';
                 document.getElementById('user-name').innerText = user.displayName;
-                loginPrompt.classList.add('hidden');
                 document.getElementById('logout-btn').onclick = () => signOut(auth);
             } else {
                 loginUI.classList.remove('hidden');
                 userInfo.classList.add('hidden');
-                loginPrompt.classList.remove('hidden');
                 document.getElementById('login-btn').onclick = async () => {
                     const provider = new GoogleAuthProvider();
                     try {
@@ -450,8 +599,6 @@
             }
             updateDashboard();
         }
-
-        // Run dashboard update immediately
         updateDashboard();
     </script>
 </body>
