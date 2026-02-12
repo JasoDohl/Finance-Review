@@ -48,23 +48,66 @@
                     <span class="mr-3">🏠</span> Home Dashboard
                 </button>
                 <button onclick="window.app.showPage('ch1')" id="nav-ch1" class="w-full flex items-center px-6 py-4 text-left hover:bg-slate-50 transition">
-                    <span class="mr-3">🔑</span> Chapter 1: Decisions
+                    <span class="mr-3">🔑</span> Ch 1: Making Decisions
                 </button>
                 <button onclick="window.app.showPage('ch2')" id="nav-ch2" class="w-full flex items-center px-6 py-4 text-left hover:bg-slate-50 transition text-slate-400 cursor-not-allowed">
-                    <span class="mr-3">📊</span> Chapter 2: (Coming Soon)
+                    <span class="mr-3">📊</span> Ch 2: (Coming Soon)
                 </button>
             </nav>
         </aside>
 
         <!-- Main Content Area -->
         <main class="flex-1 p-4 md:p-10 relative">
+            
             <!-- Config Warning Overlay -->
             <div id="config-warning" class="hidden absolute inset-0 bg-white/90 z-50 flex items-center justify-center backdrop-blur-sm">
                 <div class="bg-white p-8 rounded-2xl shadow-2xl border-2 border-red-100 max-w-lg text-center">
                     <h2 class="text-2xl font-bold text-red-600 mb-2">⚠️ Configuration Needed</h2>
-                    <p class="text-slate-600 mb-4">The teacher needs to update the code with Firebase keys for the login to work.</p>
-                    <p class="text-xs text-slate-400 bg-slate-100 p-2 rounded">Open index.html and look for "PASTE YOUR FIREBASE CONFIG HERE"</p>
+                    <p class="text-slate-600 mb-4">You need to paste your Firebase Keys into the code.</p>
+                    <p class="text-xs text-slate-400 bg-slate-100 p-2 rounded">Open index.html and look for lines 300-307.</p>
                     <button onclick="document.getElementById('config-warning').classList.add('hidden')" class="mt-4 text-indigo-600 underline text-sm">Continue using Local Storage for now</button>
+                </div>
+            </div>
+
+            <!-- Notes Modal (Cheat Sheet) -->
+            <div id="notes-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+                <div class="bg-white rounded-xl shadow-2xl w-full max-w-3xl max-h-[85vh] overflow-y-auto">
+                    <div class="p-6 border-b flex justify-between items-center sticky top-0 bg-white">
+                        <h3 class="text-xl font-bold text-indigo-800">Chapter 1 Review Notes</h3>
+                        <button onclick="document.getElementById('notes-modal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600 font-bold text-xl">✕</button>
+                    </div>
+                    <div class="p-6 text-sm text-slate-700 space-y-6">
+                        <!-- Section 1 -->
+                        <div class="bg-blue-50 p-4 rounded-lg">
+                            <h4 class="font-bold text-blue-900 mb-2">The Process & Influences</h4>
+                            <ul class="list-disc pl-5 space-y-1">
+                                <li><strong>5 Steps:</strong> Identify Problem → Gather Info → Consequences → Action → Evaluate.</li>
+                                <li><strong>Economic Influences:</strong> Interest Rates, Inflation, Unemployment, GDP.</li>
+                                <li><strong>Personal Influences:</strong> Age, Values, Family, Peers.</li>
+                                <li><strong>6 Specific Factors:</strong> Values, Peers, Habits, Feelings, Family, Risks/Consequences.</li>
+                            </ul>
+                        </div>
+                        <!-- Section 2 -->
+                        <div class="bg-green-50 p-4 rounded-lg">
+                            <h4 class="font-bold text-green-900 mb-2">Money & Economy</h4>
+                            <ul class="list-disc pl-5 space-y-1">
+                                <li><strong>Interest Rates:</strong> High rates = Less borrowing, More saving. Low rates = More spending.</li>
+                                <li><strong>GDP:</strong> Total value of goods/services produced in the country.</li>
+                                <li><strong>Consumer Spending:</strong> Rises when employment is high and interest rates are low.</li>
+                            </ul>
+                        </div>
+                        <!-- Section 3 -->
+                        <div class="bg-purple-50 p-4 rounded-lg">
+                            <h4 class="font-bold text-purple-900 mb-2">Risks & Costs</h4>
+                            <ul class="list-disc pl-5 space-y-1">
+                                <li><strong>Opportunity Cost:</strong> What you give up when making a decision.</li>
+                                <li><strong>Personal Opp Cost:</strong> Time, health, energy.</li>
+                                <li><strong>Financial Opp Cost:</strong> Monetary value (interest lost).</li>
+                                <li><strong>Time Value of Money:</strong> Calculating increases in money over time (Interest).</li>
+                                <li><strong>Risks:</strong> Liquidity (Cash conversion), Inflation (Price rise), Personal (Safety).</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -75,7 +118,7 @@
                     <div class="bg-white rounded-2xl shadow-sm p-8 mb-6 border border-slate-200">
                         <h1 class="text-3xl font-extrabold text-slate-800 mb-4">Welcome to the Interactive Review Hub</h1>
                         <p class="text-slate-600 leading-relaxed mb-6">
-                            This site is designed to help you prepare for your chapter tests through interactive games and escape rooms. 
+                            This site is designed to help you prepare for your chapter tests through interactive games. 
                             <span id="login-prompt" class="font-bold text-indigo-600">Sign in to save your progress!</span>
                         </p>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -91,55 +134,146 @@
                     </div>
                 </section>
 
-                <!-- CHAPTER 1 PAGE -->
+                <!-- CHAPTER 1: FULL REVIEW GAME -->
                 <section id="page-ch1" class="fade-in hidden">
-                    <div class="bg-white rounded-2xl shadow-xl p-8 min-h-[500px] border border-slate-200">
-                        <!-- Escape Room Container -->
-                        <div id="ch1-game">
-                            <header class="text-center mb-10">
-                                <h2 class="text-2xl font-bold text-indigo-700 mb-2">The Crossroads Escape</h2>
-                                <div class="w-full bg-slate-100 rounded-full h-2 mt-4">
-                                    <div id="ch1-progress" class="bg-indigo-600 h-2 rounded-full transition-all duration-500" style="width: 20%"></div>
-                                </div>
-                                <p id="ch1-step-text" class="text-xs font-bold text-slate-400 mt-2 uppercase tracking-widest">Stage 1: The Process</p>
-                            </header>
+                    <div class="bg-white rounded-2xl shadow-xl p-8 min-h-[600px] border border-slate-200 relative">
+                        
+                        <!-- Header -->
+                        <div class="flex justify-between items-start mb-8">
+                            <div>
+                                <h2 class="text-2xl font-bold text-indigo-700">Chapter 1 Review Challenge</h2>
+                                <p class="text-slate-500 text-sm">10 Questions covering your Lesson Review Sheet</p>
+                            </div>
+                            <button onclick="document.getElementById('notes-modal').classList.remove('hidden')" class="text-xs bg-amber-100 hover:bg-amber-200 text-amber-800 px-4 py-2 rounded-full border border-amber-200 font-bold transition">
+                                📖 Open Cheat Sheet
+                            </button>
+                        </div>
 
-                            <!-- Question Stages -->
+                        <!-- Progress -->
+                        <div class="w-full bg-slate-100 rounded-full h-2 mb-8">
+                            <div id="ch1-progress" class="bg-indigo-600 h-2 rounded-full transition-all duration-500" style="width: 5%"></div>
+                        </div>
+
+                        <!-- Game Container -->
+                        <div id="ch1-game-container">
+                            
+                            <!-- Q1 -->
                             <div id="ch1-q1" class="ch1-stage">
-                                <p class="text-lg mb-6 font-medium">Alex has two job offers. What is the <strong>very first step</strong> in the decision-making process?</p>
+                                <span class="text-xs font-bold text-indigo-500 uppercase">Question 1 / 10</span>
+                                <p class="text-xl mt-2 mb-6 font-medium">According to Review Question #3: What is the <strong>very first step</strong> in the decision-making process?</p>
                                 <div class="grid gap-3">
-                                    <button onclick="window.app.handleCh1(1, 'B')" class="p-4 border rounded-lg hover:bg-indigo-50 text-left transition">Identify the problem</button>
-                                    <button onclick="window.app.handleCh1(1, 'A')" class="p-4 border rounded-lg hover:bg-indigo-50 text-left transition">Evaluate the results</button>
-                                    <button onclick="window.app.handleCh1(1, 'C')" class="p-4 border rounded-lg hover:bg-indigo-50 text-left transition">Gather information</button>
+                                    <button onclick="window.app.handleCh1(1, 'A')" class="p-4 border-2 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 text-left transition">Evaluate the results</button>
+                                    <button onclick="window.app.handleCh1(1, 'B')" class="p-4 border-2 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 text-left transition">Identify the problem</button>
+                                    <button onclick="window.app.handleCh1(1, 'C')" class="p-4 border-2 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 text-left transition">Gather information</button>
                                 </div>
                             </div>
 
+                            <!-- Q2 -->
                             <div id="ch1-q2" class="ch1-stage hidden">
-                                <p class="text-lg mb-6 font-medium">Alex hears <strong>Interest Rates</strong> are rising. What is the likely result?</p>
+                                <span class="text-xs font-bold text-indigo-500 uppercase">Question 2 / 10</span>
+                                <p class="text-xl mt-2 mb-6 font-medium">From Review Question #6: Is <strong>Procrastination</strong> considered an Economic or Personal influence?</p>
                                 <div class="grid gap-3">
-                                    <button onclick="window.app.handleCh1(2, 'A')" class="p-4 border rounded-lg hover:bg-indigo-50 text-left transition">Higher spending</button>
-                                    <button onclick="window.app.handleCh1(2, 'B')" class="p-4 border rounded-lg hover:bg-indigo-50 text-left transition">Less borrowing</button>
-                                    <button onclick="window.app.handleCh1(2, 'C')" class="p-4 border rounded-lg hover:bg-indigo-50 text-left transition">Lower taxes</button>
+                                    <button onclick="window.app.handleCh1(2, 'A')" class="p-4 border-2 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 text-left transition">Economic Influence</button>
+                                    <button onclick="window.app.handleCh1(2, 'B')" class="p-4 border-2 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 text-left transition">Personal Influence</button>
                                 </div>
                             </div>
 
+                            <!-- Q3 -->
                             <div id="ch1-q3" class="ch1-stage hidden">
-                                <p class="text-lg mb-6 font-medium">What is <strong>Liquidity Risk</strong>?</p>
+                                <span class="text-xs font-bold text-indigo-500 uppercase">Question 3 / 10</span>
+                                <p class="text-xl mt-2 mb-6 font-medium">From Review Question #7: What does <strong>Higher Interest Rates</strong> usually result in?</p>
                                 <div class="grid gap-3">
-                                    <button onclick="window.app.handleCh1(3, 'A')" class="p-4 border rounded-lg hover:bg-indigo-50 text-left transition">Risk of rising prices (inflation)</button>
-                                    <button onclick="window.app.handleCh1(3, 'B')" class="p-4 border rounded-lg hover:bg-indigo-50 text-left transition">Difficulty converting investments to cash quickly</button>
-                                    <button onclick="window.app.handleCh1(3, 'C')" class="p-4 border rounded-lg hover:bg-indigo-50 text-left transition">Risk of losing your job</button>
+                                    <button onclick="window.app.handleCh1(3, 'A')" class="p-4 border-2 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 text-left transition">Higher consumer spending</button>
+                                    <button onclick="window.app.handleCh1(3, 'B')" class="p-4 border-2 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 text-left transition">Less borrowing (money is expensive)</button>
+                                    <button onclick="window.app.handleCh1(3, 'C')" class="p-4 border-2 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 text-left transition">More people buying houses</button>
                                 </div>
                             </div>
 
-                            <div id="ch1-q4" class="ch1-stage hidden text-center py-10">
-                                <span class="text-5xl">🎉</span>
-                                <h3 class="text-2xl font-bold mt-4">Chapter 1 Complete!</h3>
-                                <p class="text-slate-500 mb-6">You've mastered the basics of decision making.</p>
-                                <button onclick="window.app.showPage('home')" class="bg-indigo-600 text-white px-6 py-2 rounded-lg font-bold">Return to Dashboard</button>
+                            <!-- Q4 -->
+                            <div id="ch1-q4" class="ch1-stage hidden">
+                                <span class="text-xs font-bold text-indigo-500 uppercase">Question 4 / 10</span>
+                                <p class="text-xl mt-2 mb-6 font-medium">From Review Question #10: What does <strong>Gross Domestic Product (GDP)</strong> measure?</p>
+                                <div class="grid gap-3">
+                                    <button onclick="window.app.handleCh1(4, 'A')" class="p-4 border-2 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 text-left transition">The total value of goods/services produced in the country</button>
+                                    <button onclick="window.app.handleCh1(4, 'B')" class="p-4 border-2 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 text-left transition">The unemployment rate</button>
+                                    <button onclick="window.app.handleCh1(4, 'C')" class="p-4 border-2 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 text-left transition">Changes in the buying power of the dollar</button>
+                                </div>
                             </div>
 
-                            <div id="ch1-feedback" class="mt-6 p-4 rounded-lg hidden text-center text-sm font-bold"></div>
+                            <!-- Q5 -->
+                            <div id="ch1-q5" class="ch1-stage hidden">
+                                <span class="text-xs font-bold text-indigo-500 uppercase">Question 5 / 10</span>
+                                <p class="text-xl mt-2 mb-6 font-medium">From Review Question #12: Is <strong>Unemployment</strong> considered an Economic or Personal influence?</p>
+                                <div class="grid gap-3">
+                                    <button onclick="window.app.handleCh1(5, 'A')" class="p-4 border-2 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 text-left transition">Economic Influence</button>
+                                    <button onclick="window.app.handleCh1(5, 'B')" class="p-4 border-2 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 text-left transition">Personal Influence</button>
+                                </div>
+                            </div>
+
+                            <!-- Q6 -->
+                            <div id="ch1-q6" class="ch1-stage hidden">
+                                <span class="text-xs font-bold text-indigo-500 uppercase">Question 6 / 10</span>
+                                <p class="text-xl mt-2 mb-6 font-medium">From Review Question #8: Which risk involves "difficulty converting an investment to cash quickly"?</p>
+                                <div class="grid gap-3">
+                                    <button onclick="window.app.handleCh1(6, 'A')" class="p-4 border-2 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 text-left transition">Inflation Risk</button>
+                                    <button onclick="window.app.handleCh1(6, 'B')" class="p-4 border-2 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 text-left transition">Liquidity Risk</button>
+                                    <button onclick="window.app.handleCh1(6, 'C')" class="p-4 border-2 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 text-left transition">Personal Risk</button>
+                                </div>
+                            </div>
+
+                            <!-- Q7 -->
+                            <div id="ch1-q7" class="ch1-stage hidden">
+                                <span class="text-xs font-bold text-indigo-500 uppercase">Question 7 / 10</span>
+                                <p class="text-xl mt-2 mb-6 font-medium">From Review Question #2: What is the term for "what a person gives up when making a decision"?</p>
+                                <div class="grid gap-3">
+                                    <button onclick="window.app.handleCh1(7, 'A')" class="p-4 border-2 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 text-left transition">Opportunity Cost</button>
+                                    <button onclick="window.app.handleCh1(7, 'B')" class="p-4 border-2 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 text-left transition">Sunk Cost</button>
+                                    <button onclick="window.app.handleCh1(7, 'C')" class="p-4 border-2 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 text-left transition">Liabilities</button>
+                                </div>
+                            </div>
+
+                            <!-- Q8 -->
+                            <div id="ch1-q8" class="ch1-stage hidden">
+                                <span class="text-xs font-bold text-indigo-500 uppercase">Question 8 / 10</span>
+                                <p class="text-xl mt-2 mb-6 font-medium">From Review Question #14: Which type of Opportunity Cost involves "Time, Health, or Energy"?</p>
+                                <div class="grid gap-3">
+                                    <button onclick="window.app.handleCh1(8, 'A')" class="p-4 border-2 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 text-left transition">Personal Opportunity Cost</button>
+                                    <button onclick="window.app.handleCh1(8, 'B')" class="p-4 border-2 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 text-left transition">Financial Opportunity Cost</button>
+                                </div>
+                            </div>
+
+                            <!-- Q9 -->
+                            <div id="ch1-q9" class="ch1-stage hidden">
+                                <span class="text-xs font-bold text-indigo-500 uppercase">Question 9 / 10</span>
+                                <p class="text-xl mt-2 mb-6 font-medium">From Review Question #1: "Time Value of Money" calculations (like Interest) are used to measure:</p>
+                                <div class="grid gap-3">
+                                    <button onclick="window.app.handleCh1(9, 'A')" class="p-4 border-2 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 text-left transition">Financial Opportunity Costs</button>
+                                    <button onclick="window.app.handleCh1(9, 'B')" class="p-4 border-2 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 text-left transition">Personal Opportunity Costs</button>
+                                </div>
+                            </div>
+
+                             <!-- Q10 -->
+                             <div id="ch1-q10" class="ch1-stage hidden">
+                                <span class="text-xs font-bold text-indigo-500 uppercase">Question 10 / 10</span>
+                                <p class="text-xl mt-2 mb-6 font-medium">From Review Question #15: Which of these is NOT one of the 6 factors that influence a decision?</p>
+                                <div class="grid gap-3">
+                                    <button onclick="window.app.handleCh1(10, 'A')" class="p-4 border-2 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 text-left transition">Values & Peers</button>
+                                    <button onclick="window.app.handleCh1(10, 'B')" class="p-4 border-2 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 text-left transition">Habits & Feelings</button>
+                                    <button onclick="window.app.handleCh1(10, 'C')" class="p-4 border-2 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 text-left transition">Weather & Traffic</button>
+                                </div>
+                            </div>
+
+                            <!-- Success Screen -->
+                            <div id="ch1-success" class="ch1-stage hidden text-center py-10">
+                                <span class="text-6xl">🏆</span>
+                                <h3 class="text-3xl font-bold mt-6 text-slate-800">Review Complete!</h3>
+                                <p class="text-slate-500 mb-8 mt-2">You have mastered the Chapter 1 Review Sheet.</p>
+                                <button onclick="window.app.showPage('home')" class="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-3 rounded-xl font-bold transition shadow-lg">Return to Dashboard</button>
+                            </div>
+
+                            <!-- Feedback Area -->
+                            <div id="ch1-feedback" class="mt-6 p-4 rounded-xl hidden text-center font-medium border-2"></div>
+
                         </div>
                     </div>
                 </section>
@@ -156,7 +290,7 @@
         // ============================================================
         // 🔴 TEACHER: PASTE YOUR FIREBASE CONFIG HERE
         // ============================================================
-  	 const firebaseConfig = {
+   	 const firebaseConfig = {
  	 apiKey: "AIzaSyD_Vj-V_oQOLxEfCCgerD6BanWa14PVrDY",
  	 authDomain: "financial-literacy-review.firebaseapp.com",
  	 projectId: "financial-literacy-review",
@@ -188,7 +322,6 @@
                     if (user) {
                         await loadUserData();
                     } else {
-                        // Fallback to local
                         updateDashboard(); 
                     }
                 });
@@ -197,8 +330,6 @@
             console.error("Firebase Init Error:", e);
         }
 
-        // --- Functions Exposed to Window for HTML Buttons ---
-        
         window.app = {
             showPage: (pageId) => {
                 document.querySelectorAll('section').forEach(sec => sec.classList.add('hidden'));
@@ -209,122 +340,48 @@
             },
 
             handleCh1: (step, choice) => {
-                const ch1Answers = { 1: 'B', 2: 'B', 3: 'B' };
-                const feedback = document.getElementById('ch1-feedback');
-                const isCorrect = choice === ch1Answers[step];
+                const answers = { 
+                    1: 'B', // Process Step 1
+                    2: 'B', // Procrastination = Personal
+                    3: 'B', // Higher Interest = Less borrowing
+                    4: 'A', // GDP Definition
+                    5: 'A', // Unemployment = Economic
+                    6: 'B', // Liquidity Risk Definition
+                    7: 'A', // Opp Cost Def
+                    8: 'A', // Personal Opp Cost
+                    9: 'A', // TVM measures Financial Opp Cost
+                    10: 'C' // Not a factor
+                };
+                
+                const hints = {
+                    1: "Hint: You must know what is wrong before you can fix it.",
+                    2: "Hint: Is procrastination caused by the economy (money) or your own behavior?",
+                    3: "Hint: If it costs MORE to borrow money, people do it LESS.",
+                    4: "Hint: GDP stands for Gross Domestic Product.",
+                    5: "Hint: Unemployment affects the whole economy's spending power.",
+                    6: "Hint: Liquidity is about how 'liquid' (flowy) your money is.",
+                    7: "Hint: It is the cost of the 'opportunity' you missed.",
+                    8: "Hint: Does this involve money? No. It involves time/energy.",
+                    9: "Hint: Interest is money, so it is a Financial cost.",
+                    10: "Hint: Weather/Traffic are annoyance, but not one of the 6 key factors (Values, Peers, Habits, Feelings, Family, Risks)."
+                };
 
-                feedback.classList.remove('hidden', 'bg-red-100', 'text-red-700', 'bg-green-100', 'text-green-700');
+                const feedback = document.getElementById('ch1-feedback');
+                const isCorrect = choice === answers[step];
+
+                feedback.classList.remove('hidden', 'bg-red-50', 'text-red-700', 'bg-green-50', 'text-green-700', 'border-red-200', 'border-green-200');
                 
                 if (isCorrect) {
-                    feedback.innerText = "Correct! Moving to next challenge...";
-                    feedback.classList.add('bg-green-100', 'text-green-700');
-                    feedback.classList.remove('hidden');
+                    feedback.innerText = "Correct! ✅";
+                    feedback.classList.add('bg-green-50', 'text-green-700', 'border-green-200');
                     
                     setTimeout(() => {
                         feedback.classList.add('hidden');
                         document.getElementById(`ch1-q${step}`).classList.add('hidden');
                         const next = step + 1;
-                        document.getElementById(`ch1-q${next}`).classList.remove('hidden');
                         
-                        document.getElementById('ch1-progress').style.width = (next / 4 * 100) + '%';
-                        const steps = ["The Process", "Economic Climate", "Understanding Risk", "Complete"];
-                        document.getElementById('ch1-step-text').innerText = "Stage " + next + ": " + (steps[next-1] || "Complete");
+                        // Update Progress Bar
+                        document.getElementById('ch1-progress').style.width = (next / 11 * 100) + '%';
 
-                        if (next === 4) markChapterComplete('Chapter 1');
-                    }, 1000);
-                } else {
-                    feedback.innerText = "Try again! Review your notes.";
-                    feedback.classList.add('bg-red-100', 'text-red-700');
-                    feedback.classList.remove('hidden');
-                }
-            }
-        };
-
-        // --- Helper Logic ---
-
-        async function markChapterComplete(chapterName) {
-            // Always save to local as backup
-            if (!localCompleted.includes(chapterName)) {
-                localCompleted.push(chapterName);
-                localStorage.setItem('completedCh', JSON.stringify(localCompleted));
-            }
-
-            // If logged in, save to Cloud
-            if (isFirebaseActive && user) {
-                try {
-                    const userRef = doc(db, "users", user.uid);
-                    await setDoc(userRef, { completedChapters: localCompleted }, { merge: true });
-                    console.log("Progress saved to cloud!");
-                } catch (e) {
-                    console.error("Error saving to cloud", e);
-                }
-            }
-            updateDashboard();
-        }
-
-        async function loadUserData() {
-            if (!isFirebaseActive || !user) return;
-            try {
-                const docRef = doc(db, "users", user.uid);
-                const docSnap = await getDoc(docRef);
-                if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    // Merge cloud data with local data to be safe
-                    const cloudChapters = data.completedChapters || [];
-                    localCompleted = [...new Set([...localCompleted, ...cloudChapters])];
-                    updateDashboard();
-                }
-            } catch (e) {
-                console.error("Error loading data", e);
-            }
-        }
-
-        function updateDashboard() {
-            const status = document.getElementById('completion-status');
-            if (localCompleted.length > 0) {
-                status.innerText = `Chapters Completed: ${localCompleted.join(', ')}`;
-            } else {
-                status.innerText = "You haven't completed any chapters yet.";
-            }
-        }
-
-        function updateUIForUser() {
-            const loginUI = document.getElementById('login-ui');
-            const userInfo = document.getElementById('user-info');
-            const loginPrompt = document.getElementById('login-prompt');
-            
-            if (user) {
-                loginUI.classList.add('hidden');
-                userInfo.classList.remove('hidden');
-                document.getElementById('user-photo').src = user.photoURL || '';
-                document.getElementById('user-name').innerText = user.displayName;
-                loginPrompt.classList.add('hidden');
-                
-                // Bind Logout
-                document.getElementById('logout-btn').onclick = () => signOut(auth);
-            } else {
-                loginUI.classList.remove('hidden');
-                userInfo.classList.add('hidden');
-                loginPrompt.classList.remove('hidden');
-                
-                // Bind Login
-                document.getElementById('login-btn').onclick = async () => {
-                    const provider = new GoogleAuthProvider();
-                    try {
-                        await signInWithPopup(auth, provider);
-                    } catch (error) {
-                        console.error("Login Failed", error);
-                        alert("Login failed. Ask your teacher if the domain is authorized.");
-                    }
-                };
-            }
-            updateDashboard(); // Refresh text
-        }
-
-        // Initial Run
-        updateDashboard();
-
-    </script>
-</body>
-</html>
-
+                        if (next <= 10) {
+                            document.getElementById(`ch1-q${
